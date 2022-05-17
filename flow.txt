@@ -1,6 +1,35 @@
+Update Odoo:
 
 ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 stop'
 ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/odoo/ pull origin 13.0'
 ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -u base --stop-after-init'
 ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/pip3 install "psycopg2-binary==2.7.7" -t "/opt/odoo/13.0/env/lib/python3.6/site-packages"'
 ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'
+
+
+Update QBO:
+
+ansible -i hosts_qbo all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 stop'
+ansible -i hosts_qbo all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/ext-addons pull --recurse-submodules'
+ansible -i hosts_qbo all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/ext-addons submodule init'
+ansible -i hosts_qbo all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/ext-addons submodule update'
+ansible -i hosts_qbo all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -u quickbooks_sync_online --stop-after-init'
+ansible -i hosts_qbo all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'
+
+
+Install QBO:
+
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 stop'
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/ext-addons pull --recurse-submodules'
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/ext-addons submodule init'
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/ext-addons submodule update'
+
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo ln -s /opt/odoo/13.0/ext-addons/quickbooks_intuit_online/quickbooks_sync_online /opt/odoo/13.0/all_addons'
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo ln -s /opt/odoo/13.0/ext-addons/queue/queue_job /opt/odoo/13.0/all_addons'
+
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/pip3 install "python-quickbooks==0.9.1" -t "/opt/odoo/13.0/env/lib/python3.6/site-packages"'
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/pip3 install "pycountry==20.7.3" -t "/opt/odoo/13.0/env/lib/python3.6/site-packages"'
+
+
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -i quickbooks_sync_online --stop-after-init'
+ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'

@@ -1,0 +1,5 @@
+[apps]
+34.207.130.181
+
+[apps:vars]
+ansible_ssh_user=admin
