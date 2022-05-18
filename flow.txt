@@ -33,3 +33,26 @@ ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo 
 
 ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -i quickbooks_sync_online --stop-after-init'
 ansible -i hosts_qbo_to_install all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'
+
+
+KABS to Update:
+
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 stop'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/erp/ pull origin 13.0'
+
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/erp/scripts/create-links.py \
+    --manifest-file=/opt/odoo/13.0/erp/project_setup/__manifest__.py \
+    --addons-path=/opt/odoo/13.0/erp \
+    --addons-path=/opt/odoo/13.0/ext-addons \
+    --link-path=/opt/odoo/13.0/all_addons \
+    --module=kabs_digital_sign \
+    --module=mingle_sale \
+    --module=sales_report_product_image \
+    --module=stop_partner_subscribe \
+    --module=web_tree_colorize_row \
+    --module=quickbooks_online_kabs_adjustments \
+    --module=kabs_hide_tax_pdf \
+    --module=multi_store'
+
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -u base_kabs --stop-after-init'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'
