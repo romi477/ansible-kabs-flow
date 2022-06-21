@@ -1,10 +1,10 @@
 Update Odoo:
 
-ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 stop'
-ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/odoo/ pull origin 13.0'
-ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -u base --stop-after-init'
-ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/pip3 install "psycopg2-binary==2.7.7" -t "/opt/odoo/13.0/env/lib/python3.6/site-packages"'
-ansible -i hosts all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 stop'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/odoo/ pull origin 13.0'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -u base --stop-after-init'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/pip3 install "psycopg2-binary==2.7.7" -t "/opt/odoo/13.0/env/lib/python3.6/site-packages"'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'
 
 
 Update QBO:
@@ -55,4 +55,14 @@ ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo 
     --module=multi_store'
 
 ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -u base_kabs --stop-after-init'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'
+
+
+KABS Create Link:
+
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 stop'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/ext-addons/ submodule init'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo git -C /opt/odoo/13.0/ext-addons/ submodule update'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo ln -s /opt/odoo/13.0/ext-addons/sale-workflow/sale_order_invoice_amount/ /opt/odoo/13.0/all_addons/'
+ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo -u odoo /opt/odoo/13.0/env/bin/python3 /opt/odoo/13.0/odoo/odoo-bin -c /opt/odoo/13.0/odoo.conf -d PROD -u profile_kabs --stop-after-init'
 ansible -i hosts_kabs_to_update all --private-key ~/.ssh/kabs_aws.pem  -a 'sudo service odoo-13.0 start'
